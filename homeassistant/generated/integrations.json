@@ -6521,6 +6521,12 @@
       "config_flow": true,
       "iot_class": "cloud_polling"
     },
+    "vesync_custom": {
+      "name": "vesync_custom",
+      "integration_type": "hub",
+      "config_flow": true,
+      "iot_class": "cloud_polling"
+    },
     "viaggiatreno": {
       "name": "Trenitalia ViaggiaTreno",
       "integration_type": "hub",
@@ -6600,6 +6606,12 @@
     },
     "volvooncall": {
       "name": "Volvo On Call",
+      "integration_type": "hub",
+      "config_flow": true,
+      "iot_class": "cloud_polling"
+    },
+    "vsc": {
+      "name": "VeSync Devices",
       "integration_type": "hub",
       "config_flow": true,
       "iot_class": "cloud_polling"

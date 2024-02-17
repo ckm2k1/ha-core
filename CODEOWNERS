@@ -1472,6 +1472,8 @@ build.json @home-assistant/supervisor
 /tests/components/version/ @ludeeus
 /homeassistant/components/vesync/ @markperdue @webdjoe @thegardenmonkey @cdnninja
 /tests/components/vesync/ @markperdue @webdjoe @thegardenmonkey @cdnninja
+/homeassistant/components/vesync_custom/ @ckm2k1
+/tests/components/vesync_custom/ @ckm2k1
 /homeassistant/components/vicare/ @CFenner
 /tests/components/vicare/ @CFenner
 /homeassistant/components/vilfo/ @ManneW
@@ -1489,6 +1491,8 @@ build.json @home-assistant/supervisor
 /tests/components/volumio/ @OnFreund
 /homeassistant/components/volvooncall/ @molobrakos
 /tests/components/volvooncall/ @molobrakos
+/homeassistant/components/vsc/ @ckm2k1
+/tests/components/vsc/ @ckm2k1
 /homeassistant/components/vulcan/ @Antoni-Czaplicki
 /tests/components/vulcan/ @Antoni-Czaplicki
 /homeassistant/components/wake_on_lan/ @ntilley905
