@@ -8,7 +8,6 @@ from homeassistant.components.humidifier import (
     HumidifierEntity,
     HumidifierEntityFeature,
 )
-from homeassistant.components.humidifier.const import MODE_SLEEP  # noqa: W7424
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
@@ -18,6 +17,7 @@ from .const import DOMAIN
 
 MODE_MANUAL = "manual"
 MODE_HUMIDITY = "humidity"
+MODE_SLEEP = "sleep"
 
 HUMIDIFIER_MODES = {
     "humidity": MODE_HUMIDITY,
@@ -46,11 +46,14 @@ class VeSyncHumidifier(HumidifierEntity):
     _attr_available_modes = [MODE_HUMIDITY, MODE_MANUAL, MODE_AUTO, MODE_SLEEP]
     _attr_has_entity_name = True
     _attr_name = None
+    _attr_max_humidity = 80
+    _attr_min_humidity = 30
 
     def __init__(self, device: VeSyncSuperior6000S) -> None:
         """Initialize the humidifier device."""
         self.humidifier = device
         self._attr_unique_id = f"{self.humidifier.cid}_humidifier"
+        self._attr_entity_picture = self.humidifier.device_image
 
     def update(self) -> None:
         """Fetch fresh data from VeSync API for the device."""
@@ -70,6 +73,16 @@ class VeSyncHumidifier(HumidifierEntity):
     def available(self) -> bool:
         """Return True if the device is online."""
         return self.humidifier.connection_status == "online"
+
+    @property
+    def target_humidity(self) -> int:
+        """Return the currently set target humidity."""
+        return self.humidifier.target_humidity
+
+    @property
+    def current_humidity(self) -> int:
+        """Return the currently set target humidity."""
+        return self.humidifier.humidity_level
 
     def set_mode(self, mode: str) -> None:
         """Set device operating mode."""

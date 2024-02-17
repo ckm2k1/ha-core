@@ -10,7 +10,7 @@ from homeassistant.core import HomeAssistant
 from .const import DOMAIN
 
 # For your initial PR, limit it to 1 platform.
-PLATFORMS: list[Platform] = [Platform.HUMIDIFIER]
+PLATFORMS: list[Platform] = [Platform.HUMIDIFIER, Platform.SENSOR]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -21,7 +21,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     manager = VeSync(
         username=entry.data[CONF_USERNAME],
         password=entry.data[CONF_PASSWORD],
-        time_zone="EST",  # TODO: switch to config flow
+        # switch to config flow
+        time_zone="EST",
     )
 
     if not await hass.async_add_executor_job(manager.login):
