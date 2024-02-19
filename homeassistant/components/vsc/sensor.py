@@ -39,31 +39,17 @@ async def async_setup_entry(
         async_add_entities(sensors)
 
 
-class HumidifierSensorMixin:
+class HumidifierSensorMixin(SensorEntity):
     """Base class for humidifier sensors."""
+
+    def __init__(self, device: VeSyncSuperior6000S) -> None:
+        """Initialize the sensor."""
+        self.device = device
 
     @property
     def available(self) -> bool:
         """Return True if roller and hub is available."""
         return self.device.connection_status == "online"
-
-    # def update(self) -> None:
-    #     """Update the sensor state."""
-    #     self.device.update()
-
-
-class TemperatureSensor(HumidifierSensorMixin, SensorEntity):
-    """Humidifier built-in temperature sensor."""
-
-    _attr_device_class = SensorDeviceClass.TEMPERATURE
-    _attr_native_unit_of_measurement = UnitOfTemperature.FAHRENHEIT
-    _attr_state_class = SensorStateClass.MEASUREMENT
-    _attr_has_entity_name = True
-
-    def __init__(self, device: VeSyncSuperior6000S) -> None:
-        """Initialize the sensor."""
-        self.device = device
-        self._attr_unique_id = f"{self.device.cid}_temperature"
 
     @property
     def device_info(self) -> DeviceInfo:
@@ -75,31 +61,41 @@ class TemperatureSensor(HumidifierSensorMixin, SensorEntity):
             "manufacturer": "Levoit",
         }
 
+
+class TemperatureSensor(HumidifierSensorMixin):
+    """Humidifier built-in temperature sensor."""
+
+    _attr_device_class = SensorDeviceClass.TEMPERATURE
+    _attr_native_unit_of_measurement = UnitOfTemperature.FAHRENHEIT
+    _attr_state_class = SensorStateClass.MEASUREMENT
+    _attr_has_entity_name = True
+    _attr_name = "Indoor Temperature"
+
+    @property
+    def unique_id(self) -> str:
+        """Return sensor unique id."""
+        return f"{self.device.cid}_temperature"
+
     @property
     def native_value(self) -> float | None:
         """Return current indoor temperature."""
         return self.device.temperature / 10
 
 
-class FilterLifeSensor(HumidifierSensorMixin, SensorEntity):
+class FilterLifeSensor(HumidifierSensorMixin):
     """Humidifier filter life remaining."""
 
     _attr_device_class = None
     _attr_native_unit_of_measurement = PERCENTAGE
     _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_has_entity_name = True
     _attr_name = "Filter life"
     _attr_icon = "mdi:filter"
 
-    def __init__(self, device: VeSyncSuperior6000S) -> None:
-        """Initialize the sensor."""
-        self.device = device
-        self._attr_unique_id = f"{self.device.cid}_filter_life"
-        self._attr_device_info = {
-            "identifiers": {(DOMAIN, self.device.cid)},
-            "name": "Filter life",
-            "model": "Superior 6000S",
-            "manufacturer": "Levoit",
-        }
+    @property
+    def unique_id(self) -> str:
+        """Return sensor unique id."""
+        return f"{self.device.cid}_filter_life"
 
     @property
     def native_value(self) -> int:
