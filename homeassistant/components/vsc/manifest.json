@@ -7,6 +7,6 @@
   "documentation": "https://www.home-assistant.io/integrations/vsc",
   "iot_class": "cloud_polling",
   "requirements": [
-    "git+https://github.com/ckm2k1/pyvesync.git@master#pyvesync==2.1.14"
+    "git+https://github.com/ckm2k1/pyvesync.git@master#pyvesync==2.1.15"
   ]
 }

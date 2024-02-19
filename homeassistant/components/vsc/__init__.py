@@ -21,8 +21,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     manager = VeSync(
         username=entry.data[CONF_USERNAME],
         password=entry.data[CONF_PASSWORD],
-        # switch to config flow
-        time_zone="EST",
     )
 
     if not await hass.async_add_executor_job(manager.login):

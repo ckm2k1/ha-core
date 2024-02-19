@@ -55,6 +55,16 @@ class VeSyncHumidifier(HumidifierEntity):
         self._attr_unique_id = f"{self.humidifier.cid}_humidifier"
         self._attr_entity_picture = self.humidifier.device_image
 
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Return device information."""
+        return {
+            "identifiers": {(DOMAIN, self.humidifier.cid)},
+            "model": self.humidifier.device_type,
+            "manufacturer": "Levoit",
+            "name": self.humidifier.device_name,
+        }
+
     def update(self) -> None:
         """Fetch fresh data from VeSync API for the device."""
         self.humidifier.update()
@@ -63,6 +73,11 @@ class VeSyncHumidifier(HumidifierEntity):
     def is_on(self) -> bool | None:
         """Return True if the device is on."""
         return self.humidifier.device_status == "on"
+
+    @property
+    def available_modes(self) -> list[str]:
+        """Return all available humidifier modes."""
+        return list(HUMIDIFIER_MODES.values())
 
     @property
     def mode(self) -> str:
@@ -109,13 +124,3 @@ class VeSyncHumidifier(HumidifierEntity):
     def turn_off(self, **kwargs: Any) -> None:
         """Turn off the device."""
         self.humidifier.turn_off()
-
-    @property
-    def device_info(self) -> DeviceInfo:
-        """Return device information."""
-        return {
-            "identifiers": {(DOMAIN, self.humidifier.cid)},
-            "model": self.humidifier.device_type,
-            "manufacturer": "Levoit",
-            "name": self.humidifier.device_name,
-        }

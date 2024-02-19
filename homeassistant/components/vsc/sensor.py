@@ -7,9 +7,10 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import UnitOfTemperature
+from homeassistant.const import PERCENTAGE, UnitOfTemperature
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.entity import EntityCategory
 
 # from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -29,21 +30,32 @@ async def async_setup_entry(
     """Add sensors for passed config_entry in HA."""
     manager = hass.data[DOMAIN]
 
-    new_devices = []
+    sensors: list[SensorEntity] = []
     for fan in manager.fans:
-        new_devices.append(TemperatureSensor(fan))
+        sensors.append(TemperatureSensor(fan))
+        sensors.append(FilterLifeSensor(fan))
 
-    if new_devices:
-        async_add_entities(new_devices)
+    if sensors:
+        async_add_entities(sensors)
 
 
-# This is another sensor, but more simple compared to the battery above. See the
-# comments above for how each field works.
-class TemperatureSensor(SensorEntity):
+class HumidifierSensorMixin:
+    """Base class for humidifier sensors."""
+
+    @property
+    def available(self) -> bool:
+        """Return True if roller and hub is available."""
+        return self.device.connection_status == "online"
+
+    # def update(self) -> None:
+    #     """Update the sensor state."""
+    #     self.device.update()
+
+
+class TemperatureSensor(HumidifierSensorMixin, SensorEntity):
     """Humidifier built-in temperature sensor."""
 
     _attr_device_class = SensorDeviceClass.TEMPERATURE
-    # _attr_unit_of_measurement = UnitOfTemperature.FAHRENHEIT
     _attr_native_unit_of_measurement = UnitOfTemperature.FAHRENHEIT
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_has_entity_name = True
@@ -51,14 +63,7 @@ class TemperatureSensor(SensorEntity):
     def __init__(self, device: VeSyncSuperior6000S) -> None:
         """Initialize the sensor."""
         self.device = device
-        # As per the sensor, this must be a unique value within this domain. This is done
-        # by using the device ID, and appending "_battery"
         self._attr_unique_id = f"{self.device.cid}_temperature"
-
-        # The name of the entity
-        # self._attr_name = f"{self.device.device_name} Temperature"
-
-        # self.native_unit_of_measurement = UnitOfTemperature.FAHRENHEIT
 
     @property
     def device_info(self) -> DeviceInfo:
@@ -70,23 +75,33 @@ class TemperatureSensor(SensorEntity):
             "manufacturer": "Levoit",
         }
 
-    # This property is important to let HA know if this entity is online or not.
-    # If an entity is offline (return False), the UI will refelect this.
-    @property
-    def available(self) -> bool:
-        """Return True if roller and hub is available."""
-        return self.device.connection_status == "online"
-
     @property
     def native_value(self) -> float | None:
         """Return current indoor temperature."""
         return self.device.temperature / 10
 
-    # @property
-    # def state(self) -> float:
-    #     """Return the state of the sensor."""
-    #     return self.device.temperature / 10
 
-    def update(self) -> None:
-        """Update the sensor state."""
-        self.device.update()
+class FilterLifeSensor(HumidifierSensorMixin, SensorEntity):
+    """Humidifier filter life remaining."""
+
+    _attr_device_class = None
+    _attr_native_unit_of_measurement = PERCENTAGE
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_name = "Filter life"
+    _attr_icon = "mdi:filter"
+
+    def __init__(self, device: VeSyncSuperior6000S) -> None:
+        """Initialize the sensor."""
+        self.device = device
+        self._attr_unique_id = f"{self.device.cid}_filter_life"
+        self._attr_device_info = {
+            "identifiers": {(DOMAIN, self.device.cid)},
+            "name": "Filter life",
+            "model": "Superior 6000S",
+            "manufacturer": "Levoit",
+        }
+
+    @property
+    def native_value(self) -> int:
+        """Return the percentage of remaining filter life."""
+        return self.device.filter_life
