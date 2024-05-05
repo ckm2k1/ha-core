@@ -23,6 +23,8 @@ from ..const import (
     REPORT_CONFIG_IMMEDIATE,
     REPORT_CONFIG_MAX_INT,
     REPORT_CONFIG_MIN_INT,
+    REPORT_CONFIG_MIN_INT_IMMEDIATE,
+    REPORT_CONFIG_RPT_CHANGE,
     SIGNAL_ATTR_UPDATED,
     UNKNOWN,
 )
@@ -429,7 +431,10 @@ class SinopeManufacturerClusterHandler(ClusterHandler):
     REPORT_CONFIG = (
         AttrReportConfig(
             attr="action_report",
-            config=REPORT_CONFIG_IMMEDIATE
+            config=(
+                REPORT_CONFIG_MIN_INT_IMMEDIATE,
+                REPORT_CONFIG_MIN_INT_IMMEDIATE,
+                REPORT_CONFIG_RPT_CHANGE)
         ),
     )
 
