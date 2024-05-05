@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Any
 
 from zhaquirks.inovelli.types import AllLEDEffectType, SingleLEDEffectType
 from zhaquirks.quirk_ids import TUYA_PLUG_MANUFACTURER, XIAOMI_AQARA_VIBRATION_AQ1
+from zhaquirks.sinope import SINOPE_MANUFACTURER_CLUSTER_ID
 import zigpy.zcl
 from zigpy.zcl.clusters.closures import DoorLock
 
@@ -417,6 +418,39 @@ class IkeaAirPurifierClusterHandler(ClusterHandler):
             self.async_send_signal(
                 f"{self.unique_id}_{SIGNAL_ATTR_UPDATED}", attrid, attr_name, value
             )
+
+
+@registries.CLUSTER_HANDLER_ONLY_CLUSTERS.register(SINOPE_MANUFACTURER_CLUSTER_ID)
+@registries.ZIGBEE_CLUSTER_HANDLER_REGISTRY.register(SINOPE_MANUFACTURER_CLUSTER_ID)
+class SinopeManufacturerClusterHandler(ClusterHandler):
+    """Sinope Manufacturer cluster handler."""
+    BIND = True
+
+    REPORT_CONFIG = (
+        AttrReportConfig(
+            attr="action_report",
+            config=REPORT_CONFIG_IMMEDIATE
+        ),
+    )
+
+    @classmethod
+    def matches(cls, cluster: zigpy.zcl.Cluster, endpoint: Endpoint) -> bool:
+        """Filter the cluster match for specific devices."""
+        switches = (
+            'DM2500ZB',
+            'DM2500ZB-G2',
+            'SW2500ZB',
+            'SW2500ZB-G2',
+            'DM2550ZB',
+            'DM2550ZB-G2',
+        )
+
+        _LOGGER.debug(f'matching sinope device to cluster handler {cluster.endpoint.model}')
+
+        return (
+            cluster.endpoint.model in switches
+            or cluster.endpoint.device.model in switches
+        )
 
 
 @registries.CLUSTER_HANDLER_ONLY_CLUSTERS.register(0xFC80)
