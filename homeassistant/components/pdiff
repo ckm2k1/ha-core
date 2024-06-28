@@ -1,0 +1,88 @@
+diff --git a/homeassistant/components/zha/icons.json b/homeassistant/components/zha/icons.json
+index 9d5254fe23..d6b2aef4dd 100644
+--- a/homeassistant/components/zha/icons.json
++++ b/homeassistant/components/zha/icons.json
+@@ -109,6 +109,12 @@
+       },
+       "exercise_day_of_week": {
+         "default": "mdi:wrench-clock"
++      },
++      "off_led_color": {
++        "default": "mdi:palette-outline"
++      },
++      "on_led_color": {
++        "default": "mdi:palette"
+       }
+     },
+     "sensor": {
+@@ -197,6 +203,9 @@
+       },
+       "use_load_balancing": {
+         "default": "mdi:scale-balance"
++      },
++      "double_up_full": {
++        "default": "mdi:gesture-double-tap"
+       }
+     }
+   },
+diff --git a/homeassistant/components/zha/manifest.json b/homeassistant/components/zha/manifest.json
+index dd15fb9996..40f7c0be6f 100644
+--- a/homeassistant/components/zha/manifest.json
++++ b/homeassistant/components/zha/manifest.json
+@@ -7,6 +7,7 @@
+   "dependencies": ["file_upload"],
+   "documentation": "https://www.home-assistant.io/integrations/zha",
+   "iot_class": "local_polling",
++  "version": "1.0.2",
+   "loggers": [
+     "aiosqlite",
+     "bellows",
+@@ -21,7 +22,7 @@
+     "zha",
+     "universal_silabs_flasher"
+   ],
+-  "requirements": ["universal-silabs-flasher==0.0.22", "zha==0.0.34"],
++  "requirements": ["universal-silabs-flasher==0.0.22", "git+https://github.com/ckm2k1/zha.git@dev#zha==v0.0.38"],
+   "usb": [
+     {
+       "vid": "10C4",
+diff --git a/homeassistant/components/zha/strings.json b/homeassistant/components/zha/strings.json
+index 6123081fcd..a23b4a933a 100644
+--- a/homeassistant/components/zha/strings.json
++++ b/homeassistant/components/zha/strings.json
+@@ -767,6 +767,12 @@
+       },
+       "regulation_setpoint_offset": {
+         "name": "Regulation setpoint offset"
++      },
++      "on_led_intensity": {
++        "name": "On LED Intesity"
++      },
++      "off_led_intensity": {
++        "name": "Off LED Intensity"
+       }
+     },
+     "select": {
+@@ -853,6 +859,12 @@
+       },
+       "setpoint_response_time": {
+         "name": "Setpoint response time"
++      },
++      "on_led_color": {
++        "name": "On LED Color"
++      },
++      "off_led_color": {
++        "name": "Off LED Color"
+       }
+     },
+     "sensor": {
+@@ -1127,6 +1139,9 @@
+       },
+       "adaptation_run_enabled": {
+         "name": "Adaptation run enabled"
++      },
++      "double_up_full": {
++        "name": "Double Tap On - Full"
+       }
+     }
+   }
