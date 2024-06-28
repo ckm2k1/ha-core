@@ -1127,6 +1127,8 @@
       },
       "adaptation_run_enabled": {
         "name": "Adaptation run enabled"
+      "double_up_full": {
+        "name": "Double Tap On Full"
       }
     }
   }

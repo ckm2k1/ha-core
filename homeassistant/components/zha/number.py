@@ -1151,3 +1151,18 @@ class DanfossRegulationSetpointOffset(ZHANumberConfigurationEntity):
     _attr_native_max_value: float = 2.5
     _attr_native_step: float = 0.1
     _attr_multiplier = 1 / 10
+
+
+@CONFIG_DIAGNOSTIC_MATCH(
+    cluster_handler_names="sinope_manufacturer_specific",
+    # models={"DM2500ZB", "DM2500ZB-G2", "DM2550ZB", "DM2550ZB-G2"},
+)
+class SinopeDimmerOnLevelConfigurationEntity(ZHANumberConfigurationEntity):
+    """Representation of a ZHA on level configuration entity."""
+
+    _unique_id_suffix = "on_intensity"
+    _attr_entity_category = EntityCategory.CONFIG
+    _attr_native_min_value: float = 1
+    _attr_native_max_value: float = 255
+    _attribute_name = "on_intensity"
+    _attr_translation_key: str = "on_level"

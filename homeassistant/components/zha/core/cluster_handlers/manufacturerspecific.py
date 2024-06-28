@@ -433,7 +433,26 @@ class IkeaAirPurifierClusterHandler(ClusterHandler):
 @registries.ZIGBEE_CLUSTER_HANDLER_REGISTRY.register(SINOPE_MANUFACTURER_CLUSTER_ID)
 class SinopeManufacturerClusterHandler(ClusterHandler):
     """Sinope Manufacturer cluster handler."""
+
     BIND = True
+
+    def __init__(self, cluster: zigpy.zcl.Cluster, endpoint: Endpoint) -> None:
+        """Initialize Inovelli cluster handler."""
+        super().__init__(cluster, endpoint)
+        if self.cluster.endpoint.model in [
+            "DM2550ZB",
+            "DM2550ZB-G2",
+            "DM2500ZB-G2",
+            "DM2500ZB",
+        ]:
+            self.ZCL_INIT_ATTRS = {
+                "double_up_full": True,
+                "on_intensity": True,
+            }
+        elif self.cluster.endpoint.model in ["SW2500ZB", "SW2500ZB-G2"]:
+            self.ZCL_INIT_ATTRS = {
+                "double_up_full": True,
+            }
 
     REPORT_CONFIG = (
         AttrReportConfig(
@@ -441,7 +460,8 @@ class SinopeManufacturerClusterHandler(ClusterHandler):
             config=(
                 REPORT_CONFIG_MIN_INT_IMMEDIATE,
                 REPORT_CONFIG_MIN_INT_IMMEDIATE,
-                REPORT_CONFIG_RPT_CHANGE)
+                REPORT_CONFIG_RPT_CHANGE,
+            ),
         ),
     )
 
@@ -449,22 +469,22 @@ class SinopeManufacturerClusterHandler(ClusterHandler):
     def matches(cls, cluster: zigpy.zcl.Cluster, endpoint: Endpoint) -> bool:
         """Filter the cluster match for specific devices."""
         switches = (
-            'DM2500ZB',
-            'DM2500ZB-G2',
-            'SW2500ZB',
-            'SW2500ZB-G2',
-            'DM2550ZB',
-            'DM2550ZB-G2',
+            "SW2500ZB",
+            "SW2500ZB-G2",
+            "DM2500ZB",
+            "DM2500ZB-G2",
+            "DM2550ZB",
+            "DM2550ZB-G2",
         )
 
-        _LOGGER.debug(f'matching sinope device to cluster handler {cluster.endpoint.model}')
+        _LOGGER.debug(
+            f"matching sinope device to cluster handler {cluster.endpoint.model}"
+        )
 
         return (
             cluster.endpoint.model in switches
             or cluster.endpoint.device.model in switches
         )
-
-
 @registries.CLUSTER_HANDLER_ONLY_CLUSTERS.register(0xFC80)
 @registries.ZIGBEE_CLUSTER_HANDLER_REGISTRY.register(0xFC80)
 class IkeaRemoteClusterHandler(ClusterHandler):
