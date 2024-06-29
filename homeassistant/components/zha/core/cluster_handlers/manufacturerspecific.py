@@ -439,6 +439,11 @@ class SinopeManufacturerClusterHandler(ClusterHandler):
     def __init__(self, cluster: zigpy.zcl.Cluster, endpoint: Endpoint) -> None:
         """Initialize Inovelli cluster handler."""
         super().__init__(cluster, endpoint)
+        shared_attr = {
+            "double_up_full": True,
+            "on_led_color": True,
+            "off_led_color": True,
+        }
         if self.cluster.endpoint.model in [
             "DM2550ZB",
             "DM2550ZB-G2",
@@ -446,13 +451,12 @@ class SinopeManufacturerClusterHandler(ClusterHandler):
             "DM2500ZB",
         ]:
             self.ZCL_INIT_ATTRS = {
-                "double_up_full": True,
+                **shared_attr,
                 "on_intensity": True,
             }
+
         elif self.cluster.endpoint.model in ["SW2500ZB", "SW2500ZB-G2"]:
-            self.ZCL_INIT_ATTRS = {
-                "double_up_full": True,
-            }
+            self.ZCL_INIT_ATTRS = shared_attr.copy()
 
     REPORT_CONFIG = (
         AttrReportConfig(
@@ -485,6 +489,8 @@ class SinopeManufacturerClusterHandler(ClusterHandler):
             cluster.endpoint.model in switches
             or cluster.endpoint.device.model in switches
         )
+
+
 @registries.CLUSTER_HANDLER_ONLY_CLUSTERS.register(0xFC80)
 @registries.ZIGBEE_CLUSTER_HANDLER_REGISTRY.register(0xFC80)
 class IkeaRemoteClusterHandler(ClusterHandler):

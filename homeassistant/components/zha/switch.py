@@ -193,19 +193,37 @@ class ZHASwitchConfigurationEntity(ZhaEntity, SwitchEntity):
         Return entity if it is a supported configuration, otherwise return None
         """
         cluster_handler = cluster_handlers[0]
+        try:
+            attr_val = cluster_handler.cluster.get(cls._attribute_name)
+        except:
+            attr_val = 'Not found'
+
+        _LOGGER.debug('%s - %s - %s - %s\n%s\n%s',
+            '***********',
+            cls._attribute_name,
+            unique_id,
+            (cls._attribute_name not in cluster_handler.cluster.attributes_by_name),
+            cluster_handler.cluster.unsupported_attributes,
+            cluster_handler.cluster.attributes_by_name
+        )
+
         if ENTITY_METADATA not in kwargs and (
             cls._attribute_name in cluster_handler.cluster.unsupported_attributes
             or cls._attribute_name not in cluster_handler.cluster.attributes_by_name
-            or cluster_handler.cluster.get(cls._attribute_name) is None
+            or (attr_val := cluster_handler.cluster.get(cls._attribute_name)) is None
         ):
             _LOGGER.debug(
-                "%s is not supported - skipping %s entity creation",
+                "%s is not supported - skipping %s entity creation:\nvalue: %s\nmodel:%s",
                 cls._attribute_name,
                 cls.__name__,
+                attr_val,
+                zha_device.model or zha_device.manufacturer_code
             )
             return None
 
-        return cls(unique_id, zha_device, cluster_handlers, **kwargs)
+        res = cls(unique_id, zha_device, cluster_handlers, **kwargs)
+        _LOGGER.debug('%s - %s', '##############', res.entity_id)
+        return res
 
     def __init__(
         self,
@@ -813,14 +831,12 @@ class DanfossAdaptationRunSettings(ZHASwitchConfigurationEntity):
 
 @CONFIG_DIAGNOSTIC_MATCH(
     cluster_handler_names="sinope_manufacturer_specific",
-    # models={
-    #     "SW2500ZB",
-    #     "SW2500ZB-G2",
-    #     "DM2500ZB",
-    #     "DM2500ZB-G2",
-    #     "DM2550ZB",
-    #     "DM2550ZB-G2",
-    # },
+    models={
+        "DM2500ZB",
+        "DM2500ZB-G2",
+        "DM2550ZB",
+        "DM2550ZB-G2",
+    },
 )
 class SinopeLightDoubleTapFullSwitch(ZHASwitchConfigurationEntity):
     """Representation of a switch that controls whether Double Tap Full option
@@ -830,5 +846,4 @@ class SinopeLightDoubleTapFullSwitch(ZHASwitchConfigurationEntity):
     _unique_id_suffix = "double_up_full"
     _attribute_name = "double_up_full"
     _attr_translation_key: str = "double_up_full"
-    _off_value = 0x00
-    _on_value = 0x01
+    _attr_icon = 'mdi:gesture-double-tap'

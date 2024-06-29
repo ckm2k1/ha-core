@@ -853,6 +853,12 @@
       },
       "setpoint_response_time": {
         "name": "Setpoint response time"
+      },
+      "sinope_on_led_color": {
+        "name": "On LED Color"
+      },
+      "sinope_off_led_color": {
+        "name": "Off LED Color"
       }
     },
     "sensor": {
@@ -1127,8 +1133,9 @@
       },
       "adaptation_run_enabled": {
         "name": "Adaptation run enabled"
+      },
       "double_up_full": {
-        "name": "Double Tap On Full"
+        "name": "Double Tap On - Full"
       }
     }
   }

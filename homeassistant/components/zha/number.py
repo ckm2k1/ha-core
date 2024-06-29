@@ -1155,7 +1155,7 @@ class DanfossRegulationSetpointOffset(ZHANumberConfigurationEntity):
 
 @CONFIG_DIAGNOSTIC_MATCH(
     cluster_handler_names="sinope_manufacturer_specific",
-    # models={"DM2500ZB", "DM2500ZB-G2", "DM2550ZB", "DM2550ZB-G2"},
+    models={"DM2500ZB", "DM2500ZB-G2", "DM2550ZB", "DM2550ZB-G2"},
 )
 class SinopeDimmerOnLevelConfigurationEntity(ZHANumberConfigurationEntity):
     """Representation of a ZHA on level configuration entity."""
