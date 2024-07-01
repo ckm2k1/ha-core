@@ -193,37 +193,19 @@ class ZHASwitchConfigurationEntity(ZhaEntity, SwitchEntity):
         Return entity if it is a supported configuration, otherwise return None
         """
         cluster_handler = cluster_handlers[0]
-        try:
-            attr_val = cluster_handler.cluster.get(cls._attribute_name)
-        except:
-            attr_val = 'Not found'
-
-        _LOGGER.debug('%s - %s - %s - %s\n%s\n%s',
-            '***********',
-            cls._attribute_name,
-            unique_id,
-            (cls._attribute_name not in cluster_handler.cluster.attributes_by_name),
-            cluster_handler.cluster.unsupported_attributes,
-            cluster_handler.cluster.attributes_by_name
-        )
-
         if ENTITY_METADATA not in kwargs and (
             cls._attribute_name in cluster_handler.cluster.unsupported_attributes
             or cls._attribute_name not in cluster_handler.cluster.attributes_by_name
-            or (attr_val := cluster_handler.cluster.get(cls._attribute_name)) is None
+            or cluster_handler.cluster.get(cls._attribute_name) is None
         ):
             _LOGGER.debug(
-                "%s is not supported - skipping %s entity creation:\nvalue: %s\nmodel:%s",
+                "%s is not supported - skipping %s entity creation",
                 cls._attribute_name,
                 cls.__name__,
-                attr_val,
-                zha_device.model or zha_device.manufacturer_code
             )
             return None
 
-        res = cls(unique_id, zha_device, cluster_handlers, **kwargs)
-        _LOGGER.debug('%s - %s', '##############', res.entity_id)
-        return res
+        return cls(unique_id, zha_device, cluster_handlers, **kwargs)
 
     def __init__(
         self,
