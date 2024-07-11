@@ -443,6 +443,8 @@ class SinopeManufacturerClusterHandler(ClusterHandler):
             "double_up_full": True,
             "on_led_color": True,
             "off_led_color": True,
+            "off_led_intensity": True,
+            "on_led_intensity": True,
         }
         if self.cluster.endpoint.model in [
             "DM2550ZB",

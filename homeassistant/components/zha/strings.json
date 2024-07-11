@@ -767,6 +767,12 @@
       },
       "regulation_setpoint_offset": {
         "name": "Regulation setpoint offset"
+      },
+      "on_led_intensity": {
+        "name": "On LED Intesity"
+      },
+      "off_led_intensity": {
+        "name": "Off LED Intensity"
       }
     },
     "select": {
