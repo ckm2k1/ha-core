@@ -791,6 +791,12 @@
       },
       "valve_countdown_2": {
         "name": "Irrigation time 2"
+      },
+      "on_led_intensity": {
+        "name": "On LED Intesity"
+      },
+      "off_led_intensity": {
+        "name": "Off LED Intensity"
       }
     },
     "select": {
