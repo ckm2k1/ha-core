@@ -893,10 +893,10 @@
       "weather_delay": {
         "name": "Weather delay"
       },
-      "sinope_on_led_color": {
+      "on_led_color": {
         "name": "On LED Color"
       },
-      "sinope_off_led_color": {
+      "off_led_color": {
         "name": "Off LED Color"
       }
     },
