@@ -22,7 +22,7 @@
     "zha",
     "universal_silabs_flasher"
   ],
-  "requirements": ["universal-silabs-flasher==0.0.22", "git+https://github.com/ckm2k1/zha.git@dev#zha==v0.0.32"],
+  "requirements": ["universal-silabs-flasher==0.0.22", "git+https://github.com/ckm2k1/zha.git@dev#zha==v0.0.33"],
   "usb": [
     {
       "vid": "10C4",
