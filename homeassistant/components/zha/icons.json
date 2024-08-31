@@ -109,6 +109,12 @@
       },
       "exercise_day_of_week": {
         "default": "mdi:wrench-clock"
+      },
+      "off_led_color": {
+        "default": "mdi:palette-outline"
+      },
+      "on_led_color": {
+        "default": "mdi:palette"
       }
     },
     "sensor": {
@@ -197,6 +203,9 @@
       },
       "use_load_balancing": {
         "default": "mdi:scale-balance"
+      },
+      "double_up_full": {
+        "default": "mdi:gesture-double-tap"
       }
     }
   },
